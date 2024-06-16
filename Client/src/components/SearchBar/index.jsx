@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
-import api from "../../services/searchAPI";
+import api from "../../services/courseAPI";
 import { Link } from "react-router-dom";
 
 export default function SearchBar() {

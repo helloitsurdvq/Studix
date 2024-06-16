@@ -77,8 +77,6 @@ const CreateCurriculum = () => {
         user.token,
         id,
         {contents: curriculumItems},
-        {},
-        {}
       );
       setSnackbarMessage("Course details updated successfully!");
       setSnackbarOpen(true);

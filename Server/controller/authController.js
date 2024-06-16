@@ -12,12 +12,12 @@ const createToken = (_id) => {
 // Login route
 const login = async(req, res) => {
     try {
-        const { _id, firstName, lastName, email, role, isAdmin  } = await User.login(req.body);
+        const { _id, firstName, lastName, email, role } = await User.login(req.body);
 
         // Create token
         const token = createToken(_id);
 
-        res.status(200).json({ _id, firstName, lastName, email, token, role, isAdmin });
+        res.status(200).json({ _id, firstName, lastName, email, token, role});
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -26,12 +26,12 @@ const login = async(req, res) => {
 // Signup route
 const signup =  async (req, res) => {
     try {
-        const { _id, firstName, lastName, email } = await User.signup(req.body);
+        const { _id, firstName, lastName, email, role} = await User.signup(req.body);
 
         // Create token
         const token = createToken(_id);
 
-        res.status(200).json({ _id, firstName, lastName, email, token });
+        res.status(200).json({ _id, firstName, lastName, email, token, role });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }

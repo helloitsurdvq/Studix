@@ -2,11 +2,11 @@ import axios from "axios";
 
 const VITE_APP_BASE_URL = "http://localhost:3000/api";
 
-const baseUrl = VITE_APP_BASE_URL + "/cart";
+const baseUrl = VITE_APP_BASE_URL + "/user/cart";
 
 const addToCart = async (token, id) => {
   try {
-    const response = await axios.post(`${baseUrl}/add/${id}`, {}, {
+    const response = await axios.post(`${baseUrl}/${id}`, {}, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -20,12 +20,13 @@ const addToCart = async (token, id) => {
 
 const viewCart = async (token) => {
   try {
-    const response = await axios.get(`${baseUrl}/viewcart`, {
+    const response = await axios.get(`${baseUrl}/`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(`Cart: ${response.data}`);
     return response.data.cart;
   } catch (err) {
     console.log(err);
@@ -34,7 +35,7 @@ const viewCart = async (token) => {
 
 const removeFromCart = async (token, id) => {
   try {
-    const response = await axios.post(`${baseUrl}/remove/${id}`, {}, {
+    const response = await axios.delete(`${baseUrl}/${id}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

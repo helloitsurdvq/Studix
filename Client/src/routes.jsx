@@ -115,7 +115,7 @@ export default function Router() {
         element={
           !user ? (
             <Login />
-          ) : !user.isAdmin ? (
+          ) : user.role!=="admin" ? (
             <Navigate to="/" />
           ) : (
             <AdminLayout />
@@ -132,7 +132,7 @@ export default function Router() {
         element={
           !user ? (
             <Login />
-          ) : user?.isAdmin ? (
+          ) : user.role==="admin" ? (
             <Navigate to="/admin" />
           ) : (
             <Navigate to="/" />

@@ -2,7 +2,7 @@ import axios from "axios";
 
 const VITE_APP_BASE_URL = "http://localhost:3000/api";
 
-const baseUrl = VITE_APP_BASE_URL + "/course";
+const baseUrl = VITE_APP_BASE_URL + "/courses";
 
 const getCourses = async (keyword) => {
   try {
@@ -13,28 +13,11 @@ const getCourses = async (keyword) => {
       },
     });
     console.log("Course display successfully:", response.data);
-    console.log(typeof response.data);
     return response.data;
   } catch (err) {
     console.log(err);
   }
 };
-
-const getPurchasedCourses = async (token) => {
-  try {
-    const response = await axios.get(`${baseUrl}/purchasedCourses`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    console.log("User purchased courses:", response.data);
-    console.log(typeof response.data);
-    return response.data;
-  } catch (err) {
-    console.log(err);
-  }
-}
 
 const getCourseById = async (id) => {
   try {
@@ -44,7 +27,6 @@ const getCourseById = async (id) => {
       },
     });
     console.log("Course: ", response.data);
-    console.log(typeof response.data);
     return response.data;
   } catch (err) {
     console.log(err);
@@ -53,14 +35,13 @@ const getCourseById = async (id) => {
 
 const updateRating = async (id, token, rating) => {
   try {
-    const response = await axios.post(`${baseUrl}/rating/${id}`, {rating}, {
+    const response = await axios.post(`${baseUrl}/${id}/rating`, {rating}, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("Course: ", response.data);
-    console.log(typeof response.data);
+    console.log("Course updated rating: ", response.data);
     return response.data;
   } catch (err) {
     console.log(err);
@@ -69,7 +50,6 @@ const updateRating = async (id, token, rating) => {
 
 export default {
   getCourses,
-  getPurchasedCourses,
   getCourseById,
   updateRating
 };

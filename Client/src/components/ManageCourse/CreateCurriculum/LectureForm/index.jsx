@@ -90,7 +90,7 @@ const LectureForm = ({ onAddLecture, initialLectures }) => {
 
   return (
     <div className="flex flex-col gap-3 h-min">
-      <h2 className="text-lg font-semibold text-left">Chapter Item Form</h2>
+      <h2 className="text-lg font-semibold text-left">Lesson Form</h2>
       <form onSubmit={handleSubmit}>
         <TextField
           className="w-full"
@@ -109,7 +109,7 @@ const LectureForm = ({ onAddLecture, initialLectures }) => {
 
         <div className="flex items-center gap-5">
           <FormControl required margin="normal" className="sm:w-1/3">
-            <InputLabel>Class Type</InputLabel>
+            <InputLabel>Lesson Type</InputLabel>
             <Select
               className="text-left"
               value={classType}

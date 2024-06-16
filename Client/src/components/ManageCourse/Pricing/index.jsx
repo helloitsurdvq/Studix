@@ -5,7 +5,6 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { TextField, Snackbar } from "@mui/material";
 import Button from "../../Button";
-import FormPageLayout from "../../FormPageLayout";
 import api from "../../../services/instructorAPI";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 
@@ -15,20 +14,20 @@ const Pricing = () => {
   const [pricing, setPricing] = useState("Free");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [price, setPrice] = useState({ price: 0 });
+  const [price, setPrice] = useState(0);
   const [lastPrice, setLastPrice] = useState(0);
 
   const handlePricingChange = (event) => {
     setPricing(event.target.value);
     if (event.target.value === "Free") {
-      setPrice({ price: 0 });
+      setPrice(0);
     } else {
-      setPrice({ price: lastPrice});
+      setPrice(lastPrice);
     }
   };
 
   const handleInputChange = (price) => {
-    setPrice({price});
+    setPrice(price);
     if (price>0) setLastPrice(price);
   };
   
@@ -39,22 +38,20 @@ const Pricing = () => {
   useEffect(() => {
     const fetchPricingDetails = async () => {
       try {
-        const getPrice = await api.getCourseById(user.token, id);
-        setPrice({ price: getPrice.price || 0 });
-        setLastPrice(getPrice.price || 0);
+        const course = await api.getCourseById(user.token, id);
+        setPrice(course.price || 0 );
+        setLastPrice(course.price || 0);
       } catch (error) {
         console.error("Error fetching pricing details:", error);
       }
     };
 
-    if (id) {
-      fetchPricingDetails();
-    }
+    fetchPricingDetails();
   }, [id, user.token]);
 
   const updateCoursePrice = async () => {
     try {
-      await api.updateCourse(user.token, id, price, {}, {});
+      await api.updateCourse(user.token, id, {price});
       setSnackbarMessage("Course price updated successfully!");
       setSnackbarOpen(true);
     } catch (error) {
@@ -89,7 +86,7 @@ const Pricing = () => {
             inputProps={{
               min: 0, // Set the minimum value here
             }}
-            value={price.price}
+            value={price}
             onChange={(e) => handleInputChange(e.target.value)}
             fullWidth
             variant="outlined"

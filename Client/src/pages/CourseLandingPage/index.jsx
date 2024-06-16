@@ -23,14 +23,10 @@ import VideoPlayer from "../../components/VideoPlayer";
 import CourseCTA from "../../components/CourseCTA";
 
 import { useAuthContext } from "../../hooks/useAuthContext";
-import api from "../../services/searchAPI";
+import courseApi from "../../services/courseAPI";
 import cartApi from "../../services/cartAPI";
 import instructorAPI from "../../services/instructorAPI";
-
-const exampleCourse = {
-  courseurlPreview:
-    "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley",
-};
+import userApi from "../../services/userAPI";
 
 export default function CourseLandingPage() {
   const { id } = useParams();
@@ -44,11 +40,9 @@ export default function CourseLandingPage() {
     subcategory: "",
     demoVideo: "",
     author: "",
-    details: {
-      outcomes: [{ points: "" }],
-      prerequisites: [{ points: "" }],
-      target_audience: [{ points: "" }],
-    },
+    outcomes: [],
+    prerequisites: [],
+    target_audience: [],
     // coverImage: ""
   });
   const [curriculumItems, setCurriculumItems] = useState([]);
@@ -92,7 +86,7 @@ export default function CourseLandingPage() {
 
   const handleConfirmRating = async () => {
     try {
-      await api.updateRating(id, user.token, rating);
+      await courseApi.updateRating(id, user.token, rating);
       setOldRating(rating);
       setOpenConfirmationDialog(false);
       setOpenThankYouSnackbar(true);
@@ -106,8 +100,7 @@ export default function CourseLandingPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(user);
-        const courseData = await api.getCourseById(id);
+        const courseData = await courseApi.getCourseById(id);
         setCourseDetail({
           courseTitle: courseData.courseTitle || "",
           description: courseData.description || "",
@@ -119,24 +112,13 @@ export default function CourseLandingPage() {
           author:
             `${courseData.author?.firstName} ${courseData.author?.lastName}` ||
             "",
-          details: {
-            outcomes:
-              courseData.outcomes.length > 0
-                ? JSON.parse(courseData.outcomes)
-                : [{ points: "" }],
-            prerequisites:
-              courseData.prerequisites.length > 0
-                ? JSON.parse(courseData.prerequisites)
-                : [{ points: "" }],
-            target_audience:
-              courseData.target_audience.length > 0
-                ? JSON.parse(courseData.target_audience)
-                : [{ points: "" }],
-          },
+          outcomes: courseData.outcomes || [],
+          prerequisites: courseData.prerequisites || [],
+          target_audience: courseData.target_audience || [],
         });
         setCurriculumItems(courseData.contents);
         if (user) {
-          const { purchasedCourses } = await api.getPurchasedCourses(user.token);
+          const { purchasedCourses } = await userApi.getPurchasedCourses(user.token);
           setPurchasedCourses(purchasedCourses);
 
           const userRating = purchasedCourses.find(purchasedCourse => purchasedCourse.courseId && purchasedCourse.courseId._id===id)?.rating;
@@ -171,10 +153,8 @@ export default function CourseLandingPage() {
             </p>
             <div className="block lg:hidden">
               <VideoPlayer
-                url={
-                  courseDetail.demoVideo
-                    ? courseDetail.demoVideo
-                    : "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"
+                url={courseDetail.demoVideo
+                    || "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"
                 }
               />
             </div>
@@ -319,12 +299,12 @@ export default function CourseLandingPage() {
           <div className="p-4 border border-gray-300">
             <h3 className="mb-4 text-2xl font-bold">What you'll learn</h3>
             <div className="grid grid-cols-2 gap-2 text-sm">
-              {courseDetail.details.outcomes.map((outcome, index) => (
+              {courseDetail.outcomes.map((outcome, index) => (
                 <p key={index} className="flex gap-3">
                   <span>
                     <DoneIcon fontSize="small" />
                   </span>
-                  {outcome.points}
+                  {outcome}
                 </p>
               ))}
             </div>
@@ -333,9 +313,9 @@ export default function CourseLandingPage() {
           <div>
             <h3 className="mb-4 text-2xl font-bold">Requirements</h3>
             <div className="text-sm">
-              {courseDetail.details.prerequisites.map((point, index) => (
+              {courseDetail.prerequisites.map((prerequisite, index) => (
                 <p key={index} className="flex items-center">
-                  <span className="mr-4 text-2xl">&#8226;</span> {point.points}
+                  <span className="mr-4 text-2xl">&#8226;</span> {prerequisite}
                 </p>
               ))}
             </div>
@@ -344,9 +324,9 @@ export default function CourseLandingPage() {
           <div>
             <h3 className="mb-4 text-2xl font-bold">Who this course is for?</h3>
             <div className="text-sm">
-              {courseDetail.details.target_audience.map((point, index) => (
+              {courseDetail.target_audience.map((audience, index) => (
                 <p key={index} className="flex items-center">
-                  <span className="mr-4 text-2xl">&#8226;</span> {point.points}
+                  <span className="mr-4 text-2xl">&#8226;</span> {audience}
                 </p>
               ))}
             </div>

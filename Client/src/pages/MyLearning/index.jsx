@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import CourseInfoCard from "../../components/CourseInfoCard";
 
 import { useAuthContext } from "../../hooks/useAuthContext";
-import api from "../../services/searchAPI"
+import api from "../../services/userAPI"
 
 export default function MyLearning() {
   const { user } = useAuthContext();
@@ -11,11 +11,10 @@ export default function MyLearning() {
   const [loading, setLoading] = useState(true);
     
   useEffect(() => {
-    const fetchPublishedCourses = async () => {
+    const fetchPurchasedCourses = async () => {
       try {
         if (user){
           const {purchasedCourses} = await api.getPurchasedCourses(user.token);
-          console.log(purchasedCourses)
           setPurchasedCourses(purchasedCourses.map(course => course.courseId));
         }
       } catch (error) {
@@ -25,7 +24,7 @@ export default function MyLearning() {
       }
     };
 
-    fetchPublishedCourses();
+    fetchPurchasedCourses();
   }, []);
   
 //   const renderCourses = ({ purchasedCourses, cart }) => {

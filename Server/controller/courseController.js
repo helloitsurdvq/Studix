@@ -122,7 +122,7 @@ const updateRating = async (req, res) => {
           course.ratingPoints = ((course.ratingPoints * course.numRatings) - oldRating + userRating) / course.numRatings;
       } else {
           // Add new rating
-          course.ratingPoints = ((course.ratingPoints * course.numRating) + userRating) / (course.numRatings + 1);
+          course.ratingPoints = ((course.ratingPoints * course.numRatings) + userRating) / (course.numRatings + 1);
           course.numRatings += 1;
       }
       await course.save();

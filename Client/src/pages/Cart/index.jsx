@@ -7,30 +7,6 @@ import api from "../../services/cartAPI";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { Snackbar } from "@mui/material";
 
-const exampleCourses = [
-  {
-    title: "Introduction to Programming",
-    instructor: "John Doe",
-    price: "19.99",
-    duration: "6 weeks",
-    level: "Beginner",
-  },
-  {
-    title: "Web Development Fundamentals",
-    instructor: "Jane Smith",
-    price: "29.99",
-    duration: "8 weeks",
-    level: "Intermediate",
-  },
-  {
-    title: "Data Science Basics",
-    instructor: "Alex Johnson",
-    price: "49.99",
-    duration: "10 weeks",
-    level: "Advanced",
-  },
-];
-
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const { user } = useAuthContext();
@@ -39,7 +15,6 @@ export default function Cart() {
 
   useEffect(() => {
     api.viewCart(user.token).then((cart) => {
-      console.log(cart);
       setCartItems(cart);
     });
   }, [user.token]);
@@ -61,8 +36,8 @@ export default function Cart() {
       setCartItems([]);
     }
     catch (error){
-      console.log("No courses: ", error)
-      setSnackbarMessage("No courses to checkout");
+      console.log(error)
+      setSnackbarMessage(error.response.data.message);
       setSnackbarOpen(true);
     }
   };

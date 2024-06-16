@@ -8,7 +8,7 @@ const createCourse = async (req, res) => {
         const existingCourse = await Course.findOne({ courseTitle: req.body.courseTitle });
 
         if (existingCourse) {
-            return res.status(409).json("Course name existed");
+            return res.status(409).json({ message: "Course name existed"});
         }
 
         // Define a list of fields that can be set by the user

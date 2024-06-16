@@ -5,28 +5,24 @@ const VITE_APP_BASE_URL = "http://localhost:3000/api";
 const baseUrl = VITE_APP_BASE_URL + "/instructor";
 
 const createCourse = async (token, data) => {
-  try {
-    const response = await axios.post(`${baseUrl}/createcourse`, data, {
+    const response = await axios.post(`${baseUrl}/courses`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     console.log("Course created successfully:", response.data);
     return response.data;
-  } catch (err) {
-    console.log(err);
-  }
 };
 
 const getPublishedCourse = async (token) => {
   try {
-    const response = await axios.get(`${baseUrl}/getpublishedcourse`, {
+    const response = await axios.get(`${baseUrl}/courses`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("Course information:", response.data);
+    console.log("Instructor created course:", response.data);
     return response.data;
   } catch (err) {
     console.log(err);
@@ -35,13 +31,12 @@ const getPublishedCourse = async (token) => {
 
 const getCourseById = async (token, id) => {
   try {
-    const response = await axios.get(`${baseUrl}/getcourse/${id}`, {
+    const response = await axios.get(`${baseUrl}/courses/${id}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log("Course information:", response.data);
     return response.data;
   } catch (err) {
     console.log(err);
@@ -49,8 +44,7 @@ const getCourseById = async (token, id) => {
 };
 
 const deleteCourse = async (token, id) => {
-  try {
-    const response = await axios.patch(`${baseUrl}/deletecourse/${id}`, {}, {
+    const response = await axios.delete(`${baseUrl}/courses/${id}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -59,10 +53,6 @@ const deleteCourse = async (token, id) => {
 
     console.log('Course marked for deletion:', response.data);
     return response.data;
-  } catch (err) {
-    console.error('Error marking course for deletion:', err);
-    throw err; 
-  }
 };
 
 const updateWithImage = async (
@@ -70,9 +60,8 @@ const updateWithImage = async (
   id,
   formData
 ) => {
-  try {
     const response = await axios.patch(
-      `${baseUrl}/updatewithimage/${id}`,
+      `${baseUrl}/courses/${id}/images`,
       formData,
       {
         headers: {
@@ -82,26 +71,17 @@ const updateWithImage = async (
     );
     console.log("New update course information:", response.data);
     return response.data.course;
-  } catch (err) {
-    console.log(err);
-  }
 };
 
 const updateCourse = async (
   token,
   id,
-  updateContent,
-  deleteContent,
-  addContent
+  data
 ) => {
-  try {
+    console.log(data);
     const response = await axios.patch(
-      `${baseUrl}/updatecourse/${id}`,
-      {
-        updates: updateContent,
-        deletions: deleteContent,
-        additions: addContent,
-      },
+      `${baseUrl}/courses/${id}`,
+      data,
       {
         headers: {
           "Content-Type": "application/json",
@@ -111,9 +91,6 @@ const updateCourse = async (
     );
     console.log("New update course information:", response.data);
     return response.data;
-  } catch (err) {
-    console.log(err);
-  }
 };
 
 export default {

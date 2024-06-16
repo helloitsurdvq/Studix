@@ -2,8 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import CenterAligned from "../../components/CenterAligned";
-import Layout from "../../components/Layout";
-import api from "../../services/searchAPI";
+import api from "../../services/courseAPI";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import CourseInfoCard from "../../components/CourseInfoCard";
 import { CircularProgress } from "@mui/material";

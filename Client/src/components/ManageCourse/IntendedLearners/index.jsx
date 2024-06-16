@@ -17,11 +17,9 @@ export default function IntendedLearners() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const initialFormData = {
-    details: {
-      outcomes: [{ points: "" }],
-      prerequisites: [{ points: "" }],
-      target_audience: [{ points: "" }],
-    },
+      outcomes: [],
+      prerequisites: [],
+      target_audience: [],
   };
   const [formData, setFormData] = useState(initialFormData);
 
@@ -30,19 +28,14 @@ export default function IntendedLearners() {
       try {
         const token = user.token;
         const courseData = await api.getCourseById(token, id);
-        const outcomes = JSON.parse(courseData.outcomes) || [{ points: "" }];
-        const prerequisites = JSON.parse(courseData.prerequisites) || [
-          { points: "" },
-        ];
-        const targetAudience = JSON.parse(courseData.target_audience) || [
-          { points: "" },
-        ];
+        console.log(courseData);
+        const outcomes = courseData.outcomes || [];
+        const prerequisites = courseData.prerequisites || [];
+        const target_audience = courseData.target_audience || [];
         setFormData({
-          details: {
             outcomes,
             prerequisites,
-            target_audience: targetAudience,
-          },
+            target_audience
         });
       } catch (error) {
         console.error("Error fetching course details:", error);
@@ -55,7 +48,7 @@ export default function IntendedLearners() {
   const handleInputChange = (category, index, value) => {
     setFormData((prevFormData) => {
       const updatedFormData = { ...prevFormData };
-      updatedFormData.details[category][index].points = value;
+      updatedFormData[category][index] = value;
       return updatedFormData;
     });
   };
@@ -63,7 +56,7 @@ export default function IntendedLearners() {
   const handleAddField = (category) => {
     setFormData((prevFormData) => {
       const updatedFormData = { ...prevFormData };
-      updatedFormData.details[category].push({ points: "" });
+      updatedFormData[category].push("");
       return updatedFormData;
     });
   };
@@ -71,7 +64,7 @@ export default function IntendedLearners() {
   const handleRemoveField = (category, index) => {
     setFormData((prevFormData) => {
       const updatedFormData = { ...prevFormData };
-      updatedFormData.details[category].splice(index, 1);
+      updatedFormData[category].splice(index, 1);
       return updatedFormData;
     });
   };
@@ -84,14 +77,10 @@ export default function IntendedLearners() {
     // console.log("submitted");
     try {
       const token = user.token;
-      const outcomesString = JSON.stringify(formData.details.outcomes);
-      const prerequisitesString = JSON.stringify(
-        formData.details.prerequisites
-      );
-      const targetAudienceString = JSON.stringify(
-        formData.details.target_audience
-      );
-      const datum = {
+      const outcomesString = formData.outcomes;
+      const prerequisitesString = formData.prerequisites;
+      const targetAudienceString = formData.target_audience;
+      const data = {
         outcomes: outcomesString,
         prerequisites: prerequisitesString,
         target_audience: targetAudienceString,
@@ -99,8 +88,7 @@ export default function IntendedLearners() {
       const updatedData = await api.updateCourse(
         token,
         id,
-        datum,
-        {}, {}
+        data
       );
       setSnackbarMessage("Course details updated successfully!");
       setSnackbarOpen(true);
@@ -141,7 +129,7 @@ export default function IntendedLearners() {
                 outcomes that learners can expect to achieve after finishing
                 your course.
               </p>
-              {formData.details.outcomes.map((item, index) => (
+              {formData.outcomes.map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <TextField
                     className="w-full"
@@ -150,7 +138,7 @@ export default function IntendedLearners() {
                       handleInputChange("outcomes", index, e.target.value)
                     }
                     fullWidth
-                    value={item.points}
+                    value={item}
                     placeholder="Example: Define the roles and responsibilities of a project manager"
                   />
                   <IconButton
@@ -183,7 +171,7 @@ export default function IntendedLearners() {
                 If there are no prerequisites, take advantage of this space to
                 make the course more accessible for beginners.
               </p>
-              {formData.details.prerequisites.map((item, index) => (
+              {formData.prerequisites.map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <TextField
                     className="w-full"
@@ -192,7 +180,7 @@ export default function IntendedLearners() {
                       handleInputChange("prerequisites", index, e.target.value)
                     }
                     fullWidth
-                    value={item.points}
+                    value={item}
                     placeholder="Example: No programming experience needed. You will learn everything you need to know"
                   />
                   <IconButton
@@ -222,7 +210,7 @@ export default function IntendedLearners() {
                 <br />
                 This will help you attract the right learners to your course.
               </p>
-              {formData.details.target_audience.map((item, index) => (
+              {formData.target_audience.map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <TextField
                     className="w-full"
@@ -234,7 +222,7 @@ export default function IntendedLearners() {
                         e.target.value
                       )
                     }
-                    value={item.points}
+                    value={item}
                     fullWidth
                     placeholder="Example: Beginner Python developers curious about data science"
                   />

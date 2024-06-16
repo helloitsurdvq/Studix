@@ -97,7 +97,7 @@ const renderChapter = (
         {chapter.content.length > 0 && renderLecture(index, chapter.content, deleteLecture)}
       </Accordion>
       <Button
-        label="Add Chapter Item"
+        label="Add lesson"
         variant="transparent"
         className="w-full"
         startIcon={<AddIcon />}
@@ -113,7 +113,6 @@ export default function CurriculumList({
   toggleLectureForm,
   deleteLecture
 }) {
-  const [chapterItems, setChapterItems] = useState([]);
   
   return (
     <div className="border border-solid border-black-400">

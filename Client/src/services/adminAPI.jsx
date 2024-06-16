@@ -21,24 +21,20 @@ const listUsers = async (token) => {
 };
 
 const listCourses = async (token) => {
-    try{
-        const response = await axios.get(`${baseUrl}/course`, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        console.log("Response data", response.data);
-        return response.data;
-    }
-    catch(err){
-        console.log(err);
-    }
+    const response = await axios.get(`${baseUrl}/courses`, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        }
+    });
+    console.log("Response data", response.data);
+    return response.data;
+
 };
 
 const acceptCourse = async (token, id) => {
     try {
-        const response = await axios.patch(`${baseUrl}/course/accept/${id}`, {}, {
+        const response = await axios.patch(`${baseUrl}/courses/${id}/accept`, {}, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }
@@ -54,7 +50,7 @@ const acceptCourse = async (token, id) => {
 
 const denyCourse = async (token, id) => {
     try{
-        const response = await axios.patch(`${baseUrl}/course/banned/${id}`, {}, {
+        const response = await axios.patch(`${baseUrl}/courses/${id}/ban`, {}, {
             headers:{
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -69,7 +65,7 @@ const denyCourse = async (token, id) => {
 
 const deleteCourse = async (token, id) => {
     try {
-        const response = await axios.delete(`${baseUrl}/course/${id}`, {
+        const response = await axios.delete(`${baseUrl}/courses/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -84,7 +80,7 @@ const deleteCourse = async (token, id) => {
 
 const getUserById = async (token, id) => {
     try{
-        const response = await axios.get(`${baseUrl}/user/${id}`, {
+        const response = await axios.get(`${baseUrl}/users/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,

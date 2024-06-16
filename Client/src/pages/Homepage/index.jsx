@@ -5,9 +5,10 @@ import Footer from "../../components/Footer";
 import CourseCarousel from "../../components/CourseCarousel";
 
 import { useAuthContext } from "../../hooks/useAuthContext";
-import api from "../../services/searchAPI";
+import courseApi from "../../services/courseAPI";
 import cartApi from "../../services/cartAPI";
-import instructorAPI from "../../services/instructorAPI";
+import userApi from "../../services/userAPI"
+import instructorApi from "../../services/instructorAPI";
 import CenterAligned from "../../components/CenterAligned";
 import { CircularProgress } from "@mui/material";
 
@@ -29,33 +30,30 @@ export default function Homepage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPublishedCourses = async () => {
+    const fetchData = async () => {
       try {
-        const { courses } = await api.getCourses();
+        const { courses } = await courseApi.getCourses();
         setPublishedCourses(courses);
         if (user) {
-          const { purchasedCourses } = await api.getPurchasedCourses(
+          const { purchasedCourses } = await userApi.getPurchasedCourses(
             user.token
           );
           setPurchasedCourses(purchasedCourses);
           const getCart = await cartApi.viewCart(user.token);
           setCart(getCart);
-          const getCreatedCourses = await instructorAPI.getPublishedCourse(
+          const getCreatedCourses = await instructorApi.getPublishedCourse(
             user.token
           );
           setCreatedCourses(getCreatedCourses);
-          console.log("Created courses: ", getCreatedCourses);
         }
-        console.log(courses);
-        console.log(purchasedCourses);
       } catch (error) {
-        console.error("Error fetching published courses:", error);
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchPublishedCourses();
+    fetchData();
   }, []);
 
   return isLoading ? (

@@ -62,10 +62,10 @@ const CourseInfoCard = (props) => {
           </p>
           <div className="flex items-center mt-1 space-x-1">
             <span className="text-yellow-600 text-xl font-semibold">
-              {course.totalRating}
+              {course.ratingPoints}
             </span>
-            <StarRating rating_star={course.totalRating} />
-            <span className="text-sm text-gray-500">({course.numRating})</span>
+            <StarRating rating_star={course.ratingPoints} />
+            <span className="text-sm text-gray-500">({course.numRatings})</span>
           </div>
           <p className="text-md font-semibold mt-2">
             {course.price === 0 ? "Free" : `$ ${course.price}`}

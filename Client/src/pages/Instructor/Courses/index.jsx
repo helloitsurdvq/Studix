@@ -62,7 +62,6 @@ export default function Courses() {
   };
 
   const handleCreateCourse = async () => {
-    try {
       if (!courseTitle && !category) {
         setError("Please fill in the Title and Category.");
       } else if (!courseTitle) {
@@ -72,14 +71,15 @@ export default function Courses() {
       } else if (!category) {
         setError("Please fill in the Category.");
       } else {
-        const newCourse = { courseTitle, category };
-        const createdCourse = await api.createCourse(user.token, newCourse);
-        setActiveCourses([...activeCourses, createdCourse]);
-        handleCloseDialog();
+        try {
+          const newCourse = { courseTitle, category };
+          const createdCourse = await api.createCourse(user.token, newCourse);
+          setActiveCourses([...activeCourses, createdCourse]);
+          handleCloseDialog();
+        } catch (err) {
+          setError(err.response.data.message);
+        }        
       }
-    } catch (error) {
-      console.error("Error creating course:", error);
-    }
   };
 
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function Courses() {
     fetchPublishedCourses();
   }, []);
 
-  const deleteCourse = async () => {
+  const handleDeleteCourse = async () => {
     try {
       if (selectedCourse) {
         if (selectedCourse.status === "waiting_del") {
@@ -114,7 +114,7 @@ export default function Courses() {
       }
     } catch (error) {
       console.error("Error marking deleted course:", error);
-      setSnackbarMessage("Requesting deletion failed.");
+      setSnackbarMessage(error.message);
       setSnackbarOpen(true);
     }
   };
@@ -189,7 +189,7 @@ export default function Courses() {
           <Button
             label="Remove"
             startIcon={<RemoveIcon />}
-            onClick={deleteCourse}
+            onClick={handleDeleteCourse}
           />
         </div>
       </div>

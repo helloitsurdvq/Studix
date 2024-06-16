@@ -18,11 +18,6 @@ export default function AccountSecurity() {
     firstName: "",
     lastName: "",
     currentjob: "",
-    introduction: "",
-    website: "",
-    twitter: "",
-    facebook: "",
-    linkedin: "",
   });
   useEffect(() => {
     const fetchData = async () => {
@@ -32,11 +27,6 @@ export default function AccountSecurity() {
           firstName: getData.firstName || "",
           lastName: getData.lastName || "",
           currentjob: getData.currentjob || "",
-          introduction: getData.introduction || "",
-          website: getData.website || "",
-          twitter: getData.twitter || "",
-          facebook: getData.facebook || "",
-          linkedin: getData.linkedin || "", 
         });
         console.log(formData);
       } catch (error) {
@@ -51,7 +41,6 @@ export default function AccountSecurity() {
 
   const handleOldPassword = (event) => {
     setOldPassword(event.target.value);
-    console.log(oldPassword);
   };
 
   const handleNewPassword = (event) => {
@@ -63,23 +52,26 @@ export default function AccountSecurity() {
   };
 
   const handleChangeClick = async () => {// 
-    try {
       if(oldPassword === newPassword) {
         setSnackbarMessage("Old password must be different from new password.");
         setSnackbarOpen(true);
-        throw Error();
       }
-      if(newPassword === retypePassword) {
-        const response = await api.changePassword(user.token, oldPassword, newPassword);
-        if(!response || response.status === 400) setSnackbarMessage("Wrong password.");
-        else setSnackbarMessage("Password changed successfully");
+      else if (newPassword != retypePassword){
+        setSnackbarMessage("Retype password and new password must be match");
         setSnackbarOpen(true);
       }
-    }
-    catch(err){
-      setSnackbarMessage("Error updating password.");
-      setSnackbarOpen(true);
-    }
+      else {
+        try {
+          await api.changePassword(user.token, oldPassword, newPassword);
+          setSnackbarMessage("Password changed successfully");
+          setSnackbarOpen(true);
+        }
+        catch (err){
+          console.log(err);
+          setSnackbarMessage(err.response.data.error);
+          setSnackbarOpen(true);
+        }
+      }
   };
 
   return (
