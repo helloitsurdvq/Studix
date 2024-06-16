@@ -75,15 +75,11 @@ const userSchema = Schema(
             ref: "Course",
             default: [],
         }], 
-        publishedCourses:[{
+        publishedCourse:[{
             type: Schema.Types.ObjectId,
             ref:"Course",
             default: [],
         }],
-        isAdmin: {
-            type: Boolean,
-            default: false,
-        },
         role: {
             type: String,
             enum: ['user', 'admin'],
@@ -92,4 +88,79 @@ const userSchema = Schema(
     },
     { timestamps: true }
 );
+
+userSchema.index({ email: "text"});
+userSchema.virtual('fullName').get(function() {
+    return `${this.firstName} ${this.lastName}`;
+});
+
+userSchema.statics.signup = async function (data) {
+    const { email, password } = data;
+
+    if (!email || !password) {
+        throw Error("All fields must be filled");
+    }
+    if (!validator.isEmail(email)) {
+        throw Error("Email is not valid");
+    }
+    // if (!validator.isStrongPassword(password)) {
+    //     throw Error("Password not strong enough");
+    // }
+
+    const exists = await this.findOne({ email });
+
+    if (exists) {
+        throw Error("Email already in use");
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+
+    const user = await this.create({ ...data, password: hash });
+
+    return user;
+};
+
+userSchema.statics.login = async function (data) {
+    const { email, password } = data;
+
+    if (!email || !password) {
+        throw Error("All fields must be filled");
+    }
+
+    const user = await this.findOne({ email });
+    if (!user) {
+        throw Error("Email not found");
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+        throw Error("Incorrect password");
+    }
+
+    return user;
+};
+
+userSchema.statics.getprofile = async function (data) {
+    const {firstName, lastName, currentjob, introduction, website, facebook, twitter, linkedin} = data;
+
+
+}
+
+userSchema.statics.updateprofile = async function (userId, data) {
+    try {
+      const user = await this.findByIdAndUpdate(userId, data, { new: true });
+      if (!user) {
+        throw Error("User not found");
+      }
+      return user;
+    } catch (error) {
+      throw Error("Error updating profile");
+    }
+  };
+
+userSchema.methods.changepassword = async function () {
+this.password = await bcrypt.hash(this.password, 10);
+};
+
 module.exports = mongoose.model("User", userSchema);

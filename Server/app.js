@@ -10,7 +10,22 @@ app.use(cors({
 }))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+const authRouter = require("./routes/Auth")
+app.use("/api/auth", authRouter);
+
+const instructorRouter = require("./routes/Instructor")
+app.use("/api/instructor", instructorRouter);
+
+const userRouter = require("./routes/User")
+app.use("/api/user", userRouter);
+
+const adminRouter = require("./routes/Admin")
+app.use("/api/admin", adminRouter);
+
+const courseRouter = require("./routes/Course")
+app.use("/api/courses", courseRouter);
 
 app.listen(process.env.PORT, () => {
     console.log(`Listening on port ${process.env.PORT}`);

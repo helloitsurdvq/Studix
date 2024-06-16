@@ -42,8 +42,10 @@ const courseSchema = Schema(
         ratingPoints: {
             type: Number,
             default: 0,
+            min: 0,
+            max: 5
         },
-        numRating: {
+        numRatings: {
             type: Number,
             default: 0,
         },
