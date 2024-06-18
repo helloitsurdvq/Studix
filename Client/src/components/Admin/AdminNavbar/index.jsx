@@ -15,7 +15,7 @@ function AdminNavbar() {
             <div className='flex items-center font-bold gap-2.5'>    
                 {/* add logo */}
                 <Link to="/">
-                    <img src="/public/CornHub.png" className="h-10"/>
+                    <img src="/src/assets/studix_transparent.png" className="h-10"/>
                 </Link>
                 <span className="text-black">ADMIN PANEL</span>
             </div>
