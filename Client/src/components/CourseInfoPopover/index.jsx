@@ -22,16 +22,17 @@ const Info = styled(({ className, ...props }) => (
 }));
 
 const CourseInfoPopover = ({ children, course, isPurchased, courseID, isInCart, belongToUser }) => {
-  // console.log(course);
+  console.log("Hello", course);
   const renderHighlights = () => {
-    if (!course.outcomes || !course.outcomes[0]) return null;
-    const topHighlights = convertArr(course.outcomes[0]);
+    if (!course.outcomes) return null;
+    const topHighlights = course.outcomes;
+    console.log("Hi", topHighlights)
     return (
       <div className="flex flex-col gap-2 mt-2 text-sm">
         {topHighlights.map((outcome, index) => (
           <p key={index} className="flex items-center gap-2">
             <DoneIcon fontSize="small" color="success" />
-            <span>{JSON.parse(outcome).points}</span>
+            <span>{outcome}</span>
           </p>
         ))}
       </div>
