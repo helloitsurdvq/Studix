@@ -35,7 +35,7 @@ export default function Navbar() {
               <>
                 <div className="hidden gap-8 md:flex">
                   {
-                    user.isAdmin && (
+                    user.role === 'admin' && (
                       <Link
                         to="/admin/home"
                         className="hidden text-base lg:block hover:text-gray-500 hover:cursor-pointer"
